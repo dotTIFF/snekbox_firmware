@@ -1,0 +1,6 @@
+#ifndef _VERSION_H_
+#define _VERSION_H_
+
+#define VER_CURR_SNEKBOX "@VER_CURR_SNEKBOX@"
+
+#endif
