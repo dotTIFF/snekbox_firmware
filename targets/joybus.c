@@ -13,6 +13,7 @@
 
 GCReport gcReport;
 GCReport dest_report;
+N64Report n64Report;
 PIO pio = pio1;
 uint offset;
 int sm_joybus;
@@ -148,6 +149,34 @@ void __time_critical_func(convertGCReport)(uint8_t mode)
     }
 }
 
+void __time_critical_func(convertN64Report)()
+{
+    n64Report.a = final_input_report.short_report.btn_east;
+    n64Report.b = final_input_report.short_report.btn_south;
+    n64Report.z = final_input_report.short_report.r1 || final_input_report.short_report.select;
+    n64Report.s = final_input_report.short_report.start;
+
+    n64Report.dUp = final_input_report.short_report.dpad_up;
+    n64Report.dDown = final_input_report.short_report.dpad_down;
+    n64Report.dLeft = final_input_report.short_report.dpad_left;
+    n64Report.dRight = final_input_report.short_report.dpad_right;
+
+    n64Report.RST = false;
+
+    n64Report.l = final_input_report.short_report.l2;
+    n64Report.r = final_input_report.short_report.r2;
+
+    // convert the stick into discrete button presses.
+    n64Report.cUp = final_input_report.short_report.axis_ry < N64_C_THRESH;
+    n64Report.cDown = final_input_report.short_report.axis_ry > (UINT8_MAX - N64_C_THRESH);
+    n64Report.cLeft = final_input_report.short_report.axis_rx < N64_C_THRESH;
+    n64Report.cRight = final_input_report.short_report.axis_rx > (UINT8_MAX - N64_C_THRESH);
+
+    // we store uint8, n64 wants signed int8
+    n64Report.xStick = final_input_report.short_report.axis_lx - 128;
+    n64Report.yStick = ~final_input_report.short_report.axis_ly - 128;
+}
+
 void setupGCNReport()
 {
     // all values start as zero except the sticks.
@@ -175,6 +204,9 @@ void __time_critical_func(gcn_task)()
             // first two bytes are the type of controller we are
             // last byte is rumble status.
             // https://hitmen.c02.at/files/yagcd/yagcd/chap9.html
+            // TODO: when under N64, 0x03 means PAK is inserted.
+            // this will cause games to attempt to talk to rumble/memory etc.
+            // this is also invalid for N64, it should be 0x05 0x00...but some games seem to be okay with it?
             uint8_t probeResponse[3] = {0x09, 0x00, 0x03};
 
             uint32_t result[2];
@@ -246,6 +278,21 @@ void __time_critical_func(gcn_task)()
             int resultLen = convertToPio((uint8_t *)(&dest_report), sizeof(dest_report), result);
 
             // sleep_us(7); // add delay so we don't overwrite the stop bit
+
+            pio_sm_set_enabled(pio, sm_joybus, false);
+            pio_sm_init(pio, sm_joybus, offset + joybus_offset_outmode, &config);
+            pio_sm_set_enabled(pio, sm_joybus, true);
+
+            for (int i = 0; i < resultLen; i++)
+                pio_sm_put_blocking(pio, sm_joybus, result[i]);
+        }
+        else if (buffer[0] == 0x01)
+        {
+            // N64 controller state.
+            convertN64Report();
+
+            uint32_t result[4];
+            int resultLen = convertToPio((uint8_t *)(&n64Report), sizeof(n64Report), result);
 
             pio_sm_set_enabled(pio, sm_joybus, false);
             pio_sm_init(pio, sm_joybus, offset + joybus_offset_outmode, &config);

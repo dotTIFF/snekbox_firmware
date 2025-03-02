@@ -158,7 +158,36 @@ typedef union
 
 } GCReport;
 
+typedef union
+{
+    struct
+    {
+        uint8_t dRight : 1;
+        uint8_t dLeft : 1;
+        uint8_t dDown : 1;
+        uint8_t dUp : 1;
+        uint8_t s : 1;
+        uint8_t z : 1;
+        uint8_t b : 1;
+        uint8_t a : 1;
+
+        uint8_t cRight : 1;
+        uint8_t cLeft : 1;
+        uint8_t cDown : 1;
+        uint8_t cUp : 1;
+        uint8_t r : 1;
+        uint8_t l : 1;
+        uint8_t UNKN : 1;
+        uint8_t RST : 1;
+
+        int8_t xStick;
+        int8_t yStick;
+    };
+} N64Report;
+
 #pragma pack(pop)
+
+#define N64_C_THRESH 55
 
 void gcn_setup(int dataPin);
 void gcn_task();
