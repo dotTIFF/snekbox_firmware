@@ -40,6 +40,7 @@
 #include "handlers/generic_softmat.h"
 #include "handlers/dual_ps2.h"
 #include "handlers/zuiki.h"
+#include "handlers/santroller.h"
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
@@ -402,6 +403,7 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const *desc_re
   else
   {
     DebugPrintf("Unknown device %04x:%04x", vid, pid);
+    set_rgb1(0xFF, 0, 0);
   }
 }
 
@@ -428,7 +430,7 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
 #if PRINT_TIMING
   static uint64_t prev_time = 0;
   uint64_t current_time = to_us_since_boot(get_absolute_time());
-  DebugPrintf("%llu ms", (current_time - prev_time) / 1000);
+  DebugPrintf("%0.2f ms", (current_time - prev_time) / 1000.0);
   prev_time = current_time;
 #endif
 
@@ -487,6 +489,7 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
           DISPATCH_NEW_REPORT(DUAL_PS2)
           DISPATCH_NEW_REPORT(ZUIKI)
           DISPATCH_NEW_REPORT(FUSION_HID)
+          DISPATCH_NEW_REPORT(SANTROLLER)
         default:
           DebugPrintf("Unknown handler type for dev %d:%d", dev_addr, instance);
           DebugOutputBuffer("RPT:", report, len);

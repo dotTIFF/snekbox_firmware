@@ -35,6 +35,8 @@ typedef enum
     HANDLER_ZUIKI,
 
     HANDLER_XINPUT,
+
+    HANDLER_SANTROLLER,
 } handler_type;
 
 handler_type determine_handler(uint8_t dev_addr);
