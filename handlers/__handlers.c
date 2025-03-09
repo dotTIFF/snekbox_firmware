@@ -55,7 +55,7 @@ handler_type determine_handler(uint8_t dev_addr)
     }
     else if (is_STAC(dev_addr))
     {
-        rtn = HANDLER_SMX;
+        rtn = HANDLER_STAC;
     }
     else if (is_SWITCH_PRO(dev_addr))
     {
