@@ -188,6 +188,7 @@ typedef union
 #pragma pack(pop)
 
 #define N64_C_THRESH 55
+#define N64_AXIS_MAX 85.0
 
 void gcn_setup(int dataPin);
 void gcn_task();

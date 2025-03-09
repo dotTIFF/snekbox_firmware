@@ -439,7 +439,10 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     if (memcmp(report, prev_report[instance], len))
     {
       // DebugPrintf("%d:%d", dev_addr, instance);
+
+#if ENABLE_REPORT_DUMP
       DebugOutputBuffer("RPT:", report, len);
+#endif
 
       newReport = true;
 

@@ -19,6 +19,7 @@ uint offset;
 int sm_joybus;
 pio_sm_config config;
 uint8_t buffer[3];
+bool n64_connected = false;
 
 /* PIOs are separate state machines for handling IOs with high timing precision. You load a program into them and they do their stuff on their own with deterministic timing,
    communicating with the main cores via FIFOs (and interrupts, if you want).
@@ -153,7 +154,9 @@ void __time_critical_func(convertN64Report)()
 {
     n64Report.a = final_input_report.short_report.btn_east;
     n64Report.b = final_input_report.short_report.btn_south;
-    n64Report.z = final_input_report.short_report.r1 || final_input_report.short_report.select;
+    n64Report.z = final_input_report.short_report.r1 ||
+                  final_input_report.short_report.l1 ||
+                  final_input_report.short_report.select;
     n64Report.s = final_input_report.short_report.start;
 
     n64Report.dUp = final_input_report.short_report.dpad_up;
@@ -175,6 +178,10 @@ void __time_critical_func(convertN64Report)()
     // we store uint8, n64 wants signed int8
     n64Report.xStick = final_input_report.short_report.axis_lx - 128;
     n64Report.yStick = ~final_input_report.short_report.axis_ly - 128;
+
+    // clamp the sticks n64 max values.
+    n64Report.xStick *= N64_AXIS_MAX / 128;
+    n64Report.yStick *= N64_AXIS_MAX / 128;
 }
 
 void setupGCNReport()
@@ -207,7 +214,9 @@ void __time_critical_func(gcn_task)()
             // TODO: when under N64, 0x03 means PAK is inserted.
             // this will cause games to attempt to talk to rumble/memory etc.
             // this is also invalid for N64, it should be 0x05 0x00...but some games seem to be okay with it?
-            uint8_t probeResponse[3] = {0x09, 0x00, 0x03};
+            uint8_t probeResponse[3] = {n64_connected ? 0x05 : 0x09,
+                                        0x00,
+                                        n64_connected ? 0x00 : 0x03};
 
             uint32_t result[2];
             int resultLen = convertToPio(probeResponse, 3, result);
@@ -223,7 +232,7 @@ void __time_critical_func(gcn_task)()
                 pio_sm_put_blocking(pio, sm_joybus, result[i]);
             }
 
-            DebugPrintf("GCN Probe.");
+            // DebugPrintf("GCN Probe.");
         }
         else if (buffer[0] == 0x41 || buffer[0] == 0x42)
         {
@@ -288,6 +297,8 @@ void __time_critical_func(gcn_task)()
         }
         else if (buffer[0] == 0x01)
         {
+            n64_connected = true;
+
             // N64 controller state.
             convertN64Report();
 
@@ -316,6 +327,8 @@ void __time_critical_func(gcn_task)()
 
 void gcn_setup(int dataPin)
 {
+    n64_connected = false;
+
     setupGCNReport();
 
     gpio_init(dataPin);
