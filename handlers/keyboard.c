@@ -45,6 +45,20 @@ void processKeyEvent(uint8_t keycode, bool pressed)
         helper_short_report.dpad_right = pressed;
         break;
 
+    // born to lead (b2l) dance pads register as keyboards with abcd inputs
+    case HID_KEY_A:
+        input_report.short_report.dpad_up = pressed;
+        break;
+    case HID_KEY_D:
+        input_report.short_report.dpad_down = pressed;
+        break;
+    case HID_KEY_B:
+        input_report.short_report.dpad_left = pressed;
+        break;
+    case HID_KEY_C:
+        input_report.short_report.dpad_right = pressed;
+        break;
+
     case HID_KEY_S:
         helper_short_report.btn_south = pressed;
         break;
