@@ -32,18 +32,19 @@ void processKeyEvent(uint8_t keycode, bool pressed)
         input_report.short_report.btn_south = pressed;
         break;
 
-    case HID_KEY_R:
-        helper_short_report.dpad_up = pressed;
-        break;
-    case HID_KEY_F:
-        helper_short_report.dpad_down = pressed;
-        break;
-    case HID_KEY_D:
-        helper_short_report.dpad_left = pressed;
-        break;
-    case HID_KEY_G:
-        helper_short_report.dpad_right = pressed;
-        break;
+    // had to remove these due to b2l overlapping keybindings
+    // case HID_KEY_R:
+    //     helper_short_report.dpad_up = pressed;
+    //     break;
+    // case HID_KEY_F:
+    //     helper_short_report.dpad_down = pressed;
+    //     break;
+    // case HID_KEY_D:
+    //     helper_short_report.dpad_left = pressed;
+    //     break;
+    // case HID_KEY_G:
+    //     helper_short_report.dpad_right = pressed;
+    //     break;
 
     // born to lead (b2l) dance pads register as keyboards with abcd inputs
     case HID_KEY_A:
