@@ -1,4 +1,5 @@
 #include "settings.h"
+#include "snek_box_board.h"
 
 volatile bool settings_loaded;
 volatile SnekConfig current_settings;

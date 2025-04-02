@@ -42,6 +42,8 @@
 #include "handlers/zuiki.h"
 #include "handlers/santroller.h"
 
+#include "snek_box_board.h"
+
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
