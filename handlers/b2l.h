@@ -12,7 +12,7 @@
 
 #define MAX_KEYBOARD_REPORT_SIZE 64
 
-void process_kbd_report(uint8_t dev_addr, hid_keyboard_report_t const *report, uint16_t len);
+void processB2L(uint8_t dev_addr, hid_keyboard_report_t const *report, uint16_t len);
 
 bool is_B2L(uint8_t dev_addr);
 
