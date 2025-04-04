@@ -42,6 +42,7 @@
 #include "handlers/zuiki.h"
 #include "handlers/santroller.h"
 
+#include "hardware/clocks.h"
 #include "snek_box_board.h"
 
 //--------------------------------------------------------------------+
