@@ -24,6 +24,7 @@ typedef enum
     HANDLER_SMX,
     HANDLER_SWITCH_PRO,
 
+    HANDLER_B2L,
     HANDLER_LTEK,
     HANDLER_DFORCE,
 

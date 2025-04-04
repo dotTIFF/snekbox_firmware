@@ -1,4 +1,12 @@
-#include "keyboard.h"
+#include "b2l.h"
+
+bool is_B2L(uint8_t dev_addr)
+{
+    uint16_t vid, pid;
+    tuh_vid_pid_get(dev_addr, &vid, &pid);
+
+    return (vid == B2L_VID && pid == B2L_PID);
+}
 
 // static uint8_t const keycode2ascii[128][2] = {HID_KEYCODE_TO_ASCII};
 static hid_keyboard_report_t prev_report = {0, 0, {0}}; // previous report to check key released
@@ -8,69 +16,18 @@ void processKeyEvent(uint8_t keycode, bool pressed)
 {
     switch (keycode)
     {
-    case HID_KEY_ARROW_UP:
+    // born to lead (b2l) dance pads register as keyboards with abcd inputs
+    case HID_KEY_A:
         input_report.short_report.dpad_up = pressed;
         break;
-    case HID_KEY_ARROW_DOWN:
+    case HID_KEY_D:
         input_report.short_report.dpad_down = pressed;
         break;
-    case HID_KEY_ARROW_LEFT:
+    case HID_KEY_B:
         input_report.short_report.dpad_left = pressed;
         break;
-    case HID_KEY_ARROW_RIGHT:
+    case HID_KEY_C:
         input_report.short_report.dpad_right = pressed;
-        break;
-
-    case HID_KEY_1:
-        input_report.short_report.start = pressed;
-        break;
-    case HID_KEY_F2:
-        input_report.short_report.select = pressed;
-        break;
-
-    case HID_KEY_SPACE:
-        input_report.short_report.btn_south = pressed;
-        break;
-
-    case HID_KEY_R:
-        helper_short_report.dpad_up = pressed;
-        break;
-    case HID_KEY_F:
-        helper_short_report.dpad_down = pressed;
-        break;
-    case HID_KEY_D:
-        helper_short_report.dpad_left = pressed;
-        break;
-    case HID_KEY_G:
-        helper_short_report.dpad_right = pressed;
-        break;
-
-    // born to lead (b2l) dance pads register as keyboards with abcd inputs
-    // case HID_KEY_A:
-    //     input_report.short_report.dpad_up = pressed;
-    //     break;
-    // case HID_KEY_D:
-    //     input_report.short_report.dpad_down = pressed;
-    //     break;
-    // case HID_KEY_B:
-    //     input_report.short_report.dpad_left = pressed;
-    //     break;
-    // case HID_KEY_C:
-    //     input_report.short_report.dpad_right = pressed;
-    //     break;
-
-    case HID_KEY_S:
-        helper_short_report.btn_south = pressed;
-        break;
-    case HID_KEY_Q:
-        helper_short_report.btn_east = pressed;
-        break;
-
-    case HID_KEY_2:
-        helper_short_report.start = pressed;
-        break;
-    case HID_KEY_F1:
-        helper_short_report.select = pressed;
         break;
 
     default:

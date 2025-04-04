@@ -39,6 +39,7 @@ make all -j$(nproc)
 * icedragon.io STAC
 * icedragon.io Snek Board
 * StepManiaX
+* B2L
 * LTEK
 * Gamo2 PHOENIXWAN
 * RedOctane X-Plorer

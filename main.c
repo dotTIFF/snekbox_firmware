@@ -25,6 +25,7 @@
 #include "targets/xboxog.h"
 
 #include "handlers/__handlers.h"
+#include "handlers/b2l.h"
 #include "handlers/ds3.h"
 #include "handlers/ds4.h"
 #include "handlers/ds5.h"
@@ -481,6 +482,7 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
       {
         switch (determine_handler(dev_addr))
         {
+          DISPATCH_NEW_REPORT(B2L)
           DISPATCH_NEW_REPORT(DFORCE)
           DISPATCH_NEW_REPORT(DS3)
           DISPATCH_NEW_REPORT(DS4)

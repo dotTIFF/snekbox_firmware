@@ -6,6 +6,7 @@
 #include "settings.h"
 #include "snek_box_board.h"
 
+#include "handlers/b2l.h"
 #include "handlers/ds3.h"
 #include "handlers/ds4.h"
 #include "handlers/ds5.h"
@@ -33,6 +34,10 @@ handler_type determine_handler(uint8_t dev_addr)
     if (current_device.is_xinput)
     {
         rtn = HANDLER_XINPUT;
+    }
+    else if (is_B2L(dev_addr))
+    {
+        rtn = HANDLER_B2L;
     }
     else if (is_DS3(dev_addr))
     {
