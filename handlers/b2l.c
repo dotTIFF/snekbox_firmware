@@ -56,9 +56,8 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *report, uint8
 // press logic from tinyusb host example
 
 // convert hid keycode to ascii and print via usb device CDC (ignore non-printable)
-void processB2L(uint8_t dev_addr, hid_keyboard_report_t const *report, uint16_t len)
+void processB2L(hid_keyboard_report_t const *report, uint16_t len)
 {
-    (void)dev_addr;
 
     // TODO: figure out if we need to reset since every report coming in
     // might not contain the full state of the keyboard.
