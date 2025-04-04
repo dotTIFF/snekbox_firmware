@@ -8,102 +8,18 @@ bool is_B2L(uint8_t dev_addr)
     return (vid == B2L_VID && pid == B2L_PID);
 }
 
-// static uint8_t const keycode2ascii[128][2] = {HID_KEYCODE_TO_ASCII};
-static hid_keyboard_report_t prev_report = {0, 0, {0}}; // previous report to check key released
-uint8_t repeat_b2l_keycode[MAX_KEYBOARD_REPORT_SIZE] = {0};
-
-void processB2LEvent(uint8_t keycode, bool pressed)
+void processB2L(uint8_t const *report, uint16_t len)
 {
-    switch (keycode)
+    if (report[0] == B2L_REPORT_ID && len >= sizeof(b2l_report_t))
     {
-    // born to lead (b2l) dance pads register as keyboards with abcd inputs
-    case HID_KEY_A:
-        input_report.short_report.dpad_up = pressed;
-        break;
-    case HID_KEY_D:
-        input_report.short_report.dpad_down = pressed;
-        break;
-    case HID_KEY_B:
-        input_report.short_report.dpad_left = pressed;
-        break;
-    case HID_KEY_C:
-        input_report.short_report.dpad_right = pressed;
-        break;
+        b2l_report_t new_B2L_state = {0};
+        memcpy(&new_B2L_state, report, sizeof(new_B2L_state));
+        
+        reset_report();
 
-    default:
-        break;
+        input_report.short_report.dpad_up = new_B2L_state.up;
+        input_report.short_report.dpad_down = new_B2L_state.down;
+        input_report.short_report.dpad_left = new_B2L_state.left;
+        input_report.short_report.dpad_right = new_B2L_state.right;
     }
-}
-
-// look up new key in previous keys
-static inline bool find_key_in_report(hid_keyboard_report_t const *report, uint8_t keycode, uint16_t len)
-{
-    for (uint8_t i = 0; i < len; i++)
-    {
-        if (report->keycode[i] == keycode)
-            return true;
-    }
-
-    return false;
-}
-
-// release logic from https://github.com/dquadros/RPTerm/blob/main/keybd.cpp
-// press logic from tinyusb host example
-
-// convert hid keycode to ascii and print via usb device CDC (ignore non-printable)
-void processB2L(hid_keyboard_report_t const *report, uint16_t len)
-{
-
-    // TODO: figure out if we need to reset since every report coming in
-    // might not contain the full state of the keyboard.
-    // reset_report();
-
-    // DebugOutputBuffer("KEY", report->keycode, len);
-
-    // check for key release
-    for (uint8_t i = 0; i < len; i++)
-    {
-        if (repeat_b2l_keycode[i] && !find_key_in_report(report, repeat_b2l_keycode[i], len))
-        {
-            DebugPrintf("Key released %02x", repeat_b2l_keycode[i]);
-            processB2LEvent(repeat_b2l_keycode[i], false);
-
-            repeat_b2l_keycode[i] = 0;
-        }
-    }
-
-    for (uint8_t i = 0; i < len; i++)
-    {
-        uint8_t keycode = report->keycode[i];
-
-        if (keycode)
-        {
-            if (find_key_in_report(&prev_report, keycode, len))
-            {
-                // exist in previous report means the current key is holding
-                // DebugPrintf("%02x held!", keycode);
-            }
-            else
-            {
-                // not existed in previous report means the current key is pressed
-                DebugPrintf("Key pressed %02x", keycode);
-
-                processKeyEvent(keycode, true);
-
-                // bool const is_shift = report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
-
-                // save the key as being held as it was just pressed
-                for (int j = 0; j < len; j++)
-                {
-                    if (repeat_b2l_keycode[j] == 0)
-                    {
-                        repeat_b2l_keycode[j] = keycode;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    prev_report = *report;
 }
