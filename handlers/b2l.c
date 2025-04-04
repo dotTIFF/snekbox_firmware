@@ -10,9 +10,9 @@ bool is_B2L(uint8_t dev_addr)
 
 // static uint8_t const keycode2ascii[128][2] = {HID_KEYCODE_TO_ASCII};
 static hid_keyboard_report_t prev_report = {0, 0, {0}}; // previous report to check key released
-uint8_t repeat_keycode[MAX_KEYBOARD_REPORT_SIZE] = {0};
+uint8_t repeat_b2l_keycode[MAX_KEYBOARD_REPORT_SIZE] = {0};
 
-void processKeyEvent(uint8_t keycode, bool pressed)
+void processB2LEvent(uint8_t keycode, bool pressed)
 {
     switch (keycode)
     {
@@ -33,11 +33,6 @@ void processKeyEvent(uint8_t keycode, bool pressed)
     default:
         break;
     }
-}
-
-void processModifierEvent(uint8_t modifier)
-{
-    input_report.short_report.btn_east = (modifier & (KEYBOARD_MODIFIER_LEFTALT));
 }
 
 // look up new key in previous keys
@@ -65,23 +60,15 @@ void processB2L(hid_keyboard_report_t const *report, uint16_t len)
 
     // DebugOutputBuffer("KEY", report->keycode, len);
 
-    // handle the modifier presses
-    if (prev_report.modifier != report->modifier)
-    {
-        DebugPrintf("MOD CHANGE: %02x", report->modifier);
-
-        processModifierEvent(report->modifier);
-    }
-
     // check for key release
     for (uint8_t i = 0; i < len; i++)
     {
-        if (repeat_keycode[i] && !find_key_in_report(report, repeat_keycode[i], len))
+        if (repeat_b2l_keycode[i] && !find_key_in_report(report, repeat_b2l_keycode[i], len))
         {
-            DebugPrintf("Key released %02x", repeat_keycode[i]);
-            processKeyEvent(repeat_keycode[i], false);
+            DebugPrintf("Key released %02x", repeat_b2l_keycode[i]);
+            processB2LEvent(repeat_b2l_keycode[i], false);
 
-            repeat_keycode[i] = 0;
+            repeat_b2l_keycode[i] = 0;
         }
     }
 
@@ -108,9 +95,9 @@ void processB2L(hid_keyboard_report_t const *report, uint16_t len)
                 // save the key as being held as it was just pressed
                 for (int j = 0; j < len; j++)
                 {
-                    if (repeat_keycode[j] == 0)
+                    if (repeat_b2l_keycode[j] == 0)
                     {
-                        repeat_keycode[j] = keycode;
+                        repeat_b2l_keycode[j] = keycode;
                         break;
                     }
                 }
