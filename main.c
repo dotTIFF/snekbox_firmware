@@ -41,6 +41,7 @@
 #include "handlers/dual_ps2.h"
 #include "handlers/zuiki.h"
 #include "handlers/santroller.h"
+#include "handlers/b2l.h"
 
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
@@ -389,6 +390,11 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const *desc_re
       en_helper_report = true;
     }
 
+    if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD)
+    {
+      set_key_mapping(dev_addr);
+    }
+
     // kick off receiving another hid report.
     if (tuh_hid_receive_report(dev_addr, instance))
     {
@@ -493,6 +499,7 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
           DISPATCH_NEW_REPORT(ZUIKI)
           DISPATCH_NEW_REPORT(FUSION_HID)
           DISPATCH_NEW_REPORT(SANTROLLER)
+          DISPATCH_NEW_REPORT(B2L)
         default:
           DebugPrintf("Unknown handler type for dev %d:%d", dev_addr, instance);
           DebugOutputBuffer("RPT:", report, len);
