@@ -38,6 +38,7 @@ typedef enum
     HANDLER_XINPUT,
 
     HANDLER_SANTROLLER,
+    HANDLER_B2L,
 } handler_type;
 
 handler_type determine_handler(uint8_t dev_addr);

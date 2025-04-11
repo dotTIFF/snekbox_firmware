@@ -74,6 +74,7 @@ add_executable(${PROJECT_NAME}
     handlers/dual_ps2.c
     handlers/zuiki.c
     handlers/santroller.c
+    handlers/b2l.c
     
     ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/dcd_pio_usb.c
     ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/hcd_pio_usb.c
