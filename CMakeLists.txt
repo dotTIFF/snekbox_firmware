@@ -57,7 +57,6 @@ add_executable(${PROJECT_NAME}
     targets/xboxog.c
 
     handlers/__handlers.c
-    handlers/b2l.c
     handlers/ds3.c
     handlers/ds4.c
     handlers/ds5.c
