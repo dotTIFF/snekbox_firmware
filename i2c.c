@@ -16,6 +16,8 @@
 #include <i2c_slave.h>
 #include <i2c_fifo.h>
 
+#include "snek_box_board.h"
+
 bool i2c_led_toggle;
 input_report_short_t prev_sent_report;
 

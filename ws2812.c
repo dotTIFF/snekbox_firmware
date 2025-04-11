@@ -4,6 +4,8 @@
 #include "hardware/pio.h"
 #include "pico/stdlib.h"
 
+#include "snek_box_board.h"
+
 #define WS2812_PIO pio1
 
 #define WS2812_MAX_BRIGHTNESS (0.01)

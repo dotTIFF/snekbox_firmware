@@ -43,6 +43,9 @@
 #include "handlers/santroller.h"
 #include "handlers/b2l.h"
 
+#include "hardware/clocks.h"
+#include "snek_box_board.h"
+
 //--------------------------------------------------------------------+
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+

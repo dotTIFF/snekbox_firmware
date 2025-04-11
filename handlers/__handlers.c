@@ -4,6 +4,7 @@
 
 #include "helpers.h"
 #include "settings.h"
+#include "snek_box_board.h"
 
 #include "handlers/ds3.h"
 #include "handlers/ds4.h"

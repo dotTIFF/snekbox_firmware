@@ -21,9 +21,9 @@ Put the rp2040 into bootloader mode by connecting the type c port to your comput
 There should now be flash drive you can drag the UF2 firmware file to.
 
 # building
-Ensure the rp2040 sdk is successfully installed and is available under `PICO_SDK_PATH`.
-
+Ensure the rp2040 sdk is successfully installed and is available under `PICO_SDK_PATH`. This was tested with pico 2.1.1
 ```
+export PICO_SDK_PATH=<absolute path to pico-sdk>
 mkdir build
 cd build
 cmake ../
@@ -39,6 +39,7 @@ make all -j$(nproc)
 * icedragon.io STAC
 * icedragon.io Snek Board
 * StepManiaX
+* B2L
 * LTEK
 * Gamo2 PHOENIXWAN
 * RedOctane X-Plorer
