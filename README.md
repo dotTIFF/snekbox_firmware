@@ -39,7 +39,7 @@ make all -j$(nproc)
 * icedragon.io STAC
 * icedragon.io Snek Board
 * StepManiaX
-* B2L
+* B2L (2023 version; see handlers/b2l.h notes for newer pads)
 * LTEK
 * Gamo2 PHOENIXWAN
 * RedOctane X-Plorer
