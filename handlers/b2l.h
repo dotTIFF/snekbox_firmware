@@ -19,10 +19,17 @@ typedef struct
     // Report ID = 0x01 (1)
     uint8_t reportId : 8;
 
-    uint8_t p1_up : 1;
-    uint8_t p1_down : 1;
-    uint8_t p1_left : 1;
-    uint8_t p1_right : 1;
+    // not sure why 2023 B2L arrows are switched??
+    uint8_t up : 1;
+    uint8_t left : 1;
+    uint8_t right : 1;
+    uint8_t down : 1;
+
+    // mapping for standard B2L pads
+    // uint8_t p1_up : 1;
+    // uint8_t p1_down : 1;
+    // uint8_t p1_left : 1;
+    // uint8_t p1_right : 1;
     uint8_t p1_pad : 4; // always zero
 
     uint8_t p2_up : 1;
