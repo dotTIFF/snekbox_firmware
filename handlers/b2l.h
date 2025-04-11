@@ -20,10 +20,10 @@ typedef struct
     uint8_t reportId : 8;
 
     // not sure why 2023 B2L arrows are switched??
-    uint8_t up : 1;
-    uint8_t left : 1;
-    uint8_t right : 1;
-    uint8_t down : 1;
+    uint8_t p1_up : 1;
+    uint8_t p1_left : 1;
+    uint8_t p1_right : 1;
+    uint8_t p1_down : 1;
 
     // mapping for standard B2L pads
     // uint8_t p1_up : 1;
